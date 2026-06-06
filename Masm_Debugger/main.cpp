@@ -7,6 +7,7 @@ void mainInputOutputHandling();
 void displayListOfCommands();
 void displayMemory(int[][16], char[][16], int);
 void executionOfEnterCommand(int [][16], char[][16], int, int);
+void executionOfHexCommand(int, int);
 
 int main()
 {
@@ -62,6 +63,12 @@ void mainInputOutputHandling()
             cin >> hex >> value;
             executionOfEnterCommand(memoryView, memoryRepresentation, address, value);
         }
+        else if (userInput == 'h')
+        {
+            int value1, value2;
+            cin >> hex >> value1 >> value2;
+            executionOfHexCommand(value1, value2);
+        }
         
     } while (userInput != 'q');
 }
@@ -96,7 +103,6 @@ void displayMemory(int memoryView[][16], char memoryRepresentation[][16], int st
         }
         cout << hex << right;
         cout << setfill('0') << "073F:" << setw(3) << columnIdx << rowIdx << "  ";
-        cout << dec;
         if (i == startingAddress / 16)
         {
             rowIdx = (startingAddress % 16);
@@ -143,4 +149,10 @@ void executionOfEnterCommand(int memoryView[][16] , char memoryRepresentation[][
         memoryView[column][row] = value;
         memoryRepresentation[column][row] = value;
     }
+}
+
+void executionOfHexCommand(int value1, int value2)
+{
+    cout << setfill('0');
+    cout << hex << setw(4) << (short int)(value1 + value2) << "   " << setw(4) << (short int)(value1 - value2) << endl;
 }
