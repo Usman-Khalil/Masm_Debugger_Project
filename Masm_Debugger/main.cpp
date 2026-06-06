@@ -8,6 +8,7 @@ void displayListOfCommands();
 void displayMemory(int[][16], char[][16], int);
 void executionOfEnterCommand(int [][16], char[][16], int, int);
 void executionOfHexCommand(int, int);
+void executionOfFillCommand(int[][16], char[][16], int, int , int);
 
 int main()
 {
@@ -17,24 +18,24 @@ int main()
 
 void mainInputOutputHandling()
 {
-    int memoryView[16][16] = { 0 };
-    char memoryRepresentation[16][16];
+    int (*memoryView)[16] = new int[256][16]();
+    char (*memoryRepresentation)[16] = new char[256][16]();
     int rowIdx, columnIdx;
-    for (int i = 0; i < 16; i++)
+    for (int i = 0; i < 256; i++)
     {
         for (int j = 0; j <= 16; j++)
         {
             memoryRepresentation[i][j] = '.';
         }
     }
-    char userInput;
+    char *userInput = new char;
     do
     {
         cout << "-";
-        cin >> userInput;
-        if (userInput == '?')
+        cin >> *userInput;
+        if (*userInput == '?')
             displayListOfCommands();
-        else if (userInput == 'd')
+        else if (*userInput == 'd')
         {
             cout << "\nPlease enter the Address or Press \'Enter\' for the default Address pointer : ";
             char temp;
@@ -53,7 +54,7 @@ void mainInputOutputHandling()
                 displayMemory(memoryView, memoryRepresentation, startingAddress);
             }
         }
-        else if (userInput == 'e')
+        else if (*userInput == 'e')
         {
             cout << '\n';
             int address, value;
@@ -63,14 +64,20 @@ void mainInputOutputHandling()
             cin >> hex >> value;
             executionOfEnterCommand(memoryView, memoryRepresentation, address, value);
         }
-        else if (userInput == 'h')
+        else if (*userInput == 'h')
         {
             int value1, value2;
             cin >> hex >> value1 >> value2;
             executionOfHexCommand(value1, value2);
         }
+        else if (*userInput == 'f')
+        {
+            int startingAddress, endingAddress, value;
+            cin >> startingAddress >> endingAddress >> value;
+            executionOfFillCommand(memoryView, memoryRepresentation, startingAddress, endingAddress, value);
+        }
         
-    } while (userInput != 'q');
+    } while (*userInput != 'q');
 }
 
 void displayListOfCommands()
@@ -155,4 +162,20 @@ void executionOfHexCommand(int value1, int value2)
 {
     cout << setfill('0');
     cout << hex << setw(4) << (short int)(value1 + value2) << "   " << setw(4) << (short int)(value1 - value2) << endl;
+}
+
+void executionOfFillCommand(int memoryView[][16], char memoryRepresentation[][16], int startingAddress, int endingAddress, int value)
+{
+    int startingRowIdx = startingAddress % 16;
+    int startingColumnIdx = startingAddress / 16;
+    int endingRowIdx = endingAddress % 16;
+    int endingColumnIdx = endingAddress / 16;
+    for (int i = startingColumnIdx; i <= endingColumnIdx; i++)
+    {
+        for (int j = startingRowIdx; j <= endingRowIdx; j++)
+        {
+            memoryView[i][j] = value;
+            memoryRepresentation[i][j] = value;
+        }
+    }
 }
