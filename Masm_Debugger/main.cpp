@@ -31,14 +31,14 @@ void mainInputOutputHandling()
         }
     }
 
-    char *userInput = new char;
+    char userInput ;
     do
     {
         cout << "-";
-        cin >> *userInput;
-        if (*userInput == '?')
+        cin >> userInput;
+        if (userInput == '?')
             displayListOfCommands();
-        else if (*userInput == 'd')
+        else if (userInput == 'd')
         {
             cout << "\nPlease enter the Address or Press \'Enter\' for the default Address pointer : ";
             char temp;
@@ -51,70 +51,70 @@ void mainInputOutputHandling()
             }
             else
             {
-                int *startingAddress = new int;
+                int startingAddress ;
 
                 cin >> hex 
-                    >> *startingAddress;
+                    >> startingAddress;
 
                 cout << endl ;
-                displayMemory(memoryView, memoryRepresentation, *startingAddress);
+                displayMemory(memoryView, memoryRepresentation, startingAddress);
             }
         }
-        else if (*userInput == 'e')
+        else if (userInput == 'e')
         {
             cout << '\n';
-            int *address = new int,
-                *value = new int;
+            int address,
+                value;
 
             cout << "Enter the address : ";
             cin >> hex 
-                >> *address;
+                >> address;
 
             cout << "Enter the value : ";
             cin >> hex 
-                >> *value;
+                >> value;
 
-            executionOfEnterCommand(memoryView, memoryRepresentation, *address, *value);
+            executionOfEnterCommand(memoryView, memoryRepresentation, address, value);
         }
-        else if (*userInput == 'h')
+        else if (userInput == 'h')
         {
-            int *value1 = new int,
-                *value2 = new int;
+            int value1 ,
+                value2 ;
 
             cin >> hex
-                >> *value1
-                >> *value2;
+                >> value1
+                >> value2;
 
-            executionOfHexCommand(*value1, *value2);
+            executionOfHexCommand(value1, value2);
         }
-        else if (*userInput == 'f')
+        else if (userInput == 'f')
         {
-            int *startingAddress = new int,
-                *endingAddress = new int, 
-                *value = new int;
+            int startingAddress,
+                endingAddress, 
+                value;
 
             cin >> hex 
-                >> *startingAddress 
-                >> *endingAddress 
-                >> *value;
+                >> startingAddress 
+                >> endingAddress 
+                >> value;
 
-            executionOfFillCommand(memoryView, memoryRepresentation, *startingAddress, *endingAddress, *value);
+            executionOfFillCommand(memoryView, memoryRepresentation, startingAddress, endingAddress, value);
         }
-        else if (*userInput == 'm')
+        else if (userInput == 'm')
         {
-            int *startingAddress = new int,
-                *endingAddress = new int,
-                *startingAddressWhereToMove = new int;
+            int startingAddress,
+                endingAddress,
+                startingAddressWhereToMove;
 
             cin >> hex 
-                >> *startingAddress
-                >> *endingAddress
-                >> *startingAddressWhereToMove;
+                >> startingAddress
+                >> endingAddress
+                >> startingAddressWhereToMove;
 
-            executionOfMoveCommand(memoryView, memoryRepresentation, *startingAddress, *endingAddress, *startingAddressWhereToMove);
+            executionOfMoveCommand(memoryView, memoryRepresentation, startingAddress, endingAddress, startingAddressWhereToMove);
         }
         
-    } while (*userInput != 'q');
+    } while (userInput != 'q');
 }
 
 void displayListOfCommands()
@@ -187,11 +187,6 @@ void displayMemory(int memoryView[][16], char memoryRepresentation[][16], int st
         cout << '\n';
     }
     cout << '\n';
-
-    delete rowIdx,
-           columnIdx,
-           endingOfColumn,
-           endingOfRow;
 }
 
 void executionOfEnterCommand(int memoryView[][16] , char memoryRepresentation[][16] , int address, int value)
@@ -234,11 +229,6 @@ void executionOfFillCommand(int memoryView[][16], char memoryRepresentation[][16
             memoryRepresentation[i][j] = value;
         }
     }
-
-    delete startingColumnIdx,
-           endingRowIdx,
-           endingColumnIdx,
-           startingRowIdx;
 }
 
 void executionOfMoveCommand(int memoryView[][16], char memoryRepresentation[][16], int startingAddress, int endingAddress, int startingAddressWhereToMove)
@@ -273,11 +263,4 @@ void executionOfMoveCommand(int memoryView[][16], char memoryRepresentation[][16
         }
         *columnIdx += 1;
     }
-
-    delete startingColumnIdx,
-        endingRowIdx,
-        endingColumnIdx,
-        startingRowIdx,
-        rowIdx,
-        columnIdx;
 }
