@@ -3,6 +3,28 @@
 #include <string>
 using namespace std;
 
+struct Registers
+{
+public:
+    unsigned short int AX = 0x0000,
+        BX = 0x0000,
+        CX = 0x0000,
+        DX = 0x0000,
+        SP = 0x0000,
+        BP = 0x0000,
+        DI = 0x0000,
+        SI = 0x0000,
+        DS = 0x0000,
+        ES = 0x0000,
+        SS = 0x0000,
+        CS = 0x0000,
+        IP = 0x0100;
+    string carryFlag = "NC",
+        zeroFlag = "NZ",
+        overFlag = "NV";
+
+};
+
 void mainInputOutputHandling();
 void fakeMemoryFill(char [][16]);
 void displayListOfCommands();
@@ -13,6 +35,8 @@ void executionOfFillCommand(int[][16], char[][16], int, int , int);
 void executionOfMoveCommand(int[][16], char[][16], int, int, int);
 void executionOfSearchCommand(int[][16], char[][16], int, int, int);
 void executionOfCompareCommand(int[][16], char[][16], int, int, int);
+void displayRegisters(Registers);
+
 
 int main()
 {
@@ -25,6 +49,7 @@ void mainInputOutputHandling()
     int (*memoryView)[16] = new int[256][16]();
     char (*memoryRepresentation)[16] = new char[256][16]();
     fakeMemoryFill(memoryRepresentation);
+    Registers reg;
     char userInput ;
     do
     {
@@ -41,7 +66,7 @@ void mainInputOutputHandling()
             if (temp == '\n')
             {
                 cout << endl;
-                displayMemory(memoryView, memoryRepresentation, 0x0);
+                displayMemory(memoryView, memoryRepresentation, 0x100);
             }
             else
             {
@@ -132,6 +157,10 @@ void mainInputOutputHandling()
                 >> startingAddressWhereToMove;
 
             executionOfCompareCommand(memoryView, memoryRepresentation, startingAddress, endingAddress, startingAddressWhereToMove);
+        }
+        else if (userInput == 'r')
+        {
+            displayRegisters(reg);
         }
         
     } while (userInput != 'q');
@@ -364,4 +393,25 @@ void executionOfCompareCommand(int memoryView[][16], char memoryRepresentation[]
         }
         columnIdx += 1;
     }
+}
+
+void displayRegisters(Registers reg)
+{
+    cout << endl << hex << setfill('0') << "AX=" << setw(4) << reg.AX << "  "
+        << "BX=" << setw(4) << reg.BX << "  "
+        << "CX=" << setw(4) << reg.CX << "  "
+        << "DX=" << setw(4) << reg.DX << "  "
+        << "SP=" << setw(4) << reg.SP << "  "
+        << "BP=" << setw(4) << reg.BP << "  "
+        << "SI=" << setw(4) << reg.SI << "  "
+        << "DI=" << setw(4) << reg.DI << "  \n"
+        << "DS=" << setw(4) << reg.DS << "  "
+        << "ES=" << setw(4) << reg.ES << "  "
+        << "SS=" << setw(4) << reg.SS << "  "
+        << "CS=" << setw(4) << reg.CS << "  "
+        << "IP=" << setw(4) << reg.IP << "  "
+        << reg.overFlag << "  "
+        << reg.zeroFlag << "  "
+        << reg.carryFlag << endl;
+
 }
