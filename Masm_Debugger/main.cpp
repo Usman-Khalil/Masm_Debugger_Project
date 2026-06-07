@@ -4,12 +4,15 @@
 using namespace std;
 
 void mainInputOutputHandling();
+void fakeMemoryFill(char [][16]);
 void displayListOfCommands();
 void displayMemory(int[][16], char[][16], int);
 void executionOfEnterCommand(int [][16], char[][16], int, int);
 void executionOfHexCommand(int, int);
 void executionOfFillCommand(int[][16], char[][16], int, int , int);
 void executionOfMoveCommand(int[][16], char[][16], int, int, int);
+void executionOfSearchCommand(int[][16], char[][16], int, int, int);
+void executionOfCompareCommand(int[][16], char[][16], int, int, int);
 
 int main()
 {
@@ -21,16 +24,7 @@ void mainInputOutputHandling()
 {
     int (*memoryView)[16] = new int[256][16]();
     char (*memoryRepresentation)[16] = new char[256][16]();
-    int rowIdx, columnIdx;
-
-    for (int i = 0; i < 256; i++)
-    {
-        for (int j = 0; j <= 16; j++)
-        {
-            memoryRepresentation[i][j] = '.';
-        }
-    }
-
+    fakeMemoryFill(memoryRepresentation);
     char userInput ;
     do
     {
@@ -113,8 +107,47 @@ void mainInputOutputHandling()
 
             executionOfMoveCommand(memoryView, memoryRepresentation, startingAddress, endingAddress, startingAddressWhereToMove);
         }
+        else if (userInput == 's')
+        {
+            int startingAddress,
+                endingAddress,
+                value;
+
+            cin >> hex
+                >> startingAddress
+                >> endingAddress
+                >> value;
+
+            executionOfSearchCommand(memoryView, memoryRepresentation, startingAddress, endingAddress, value);
+        }
+        else if (userInput == 'c')
+        {
+            int startingAddress,
+                endingAddress,
+                startingAddressWhereToMove;
+
+            cin >> hex
+                >> startingAddress
+                >> endingAddress
+                >> startingAddressWhereToMove;
+
+            executionOfCompareCommand(memoryView, memoryRepresentation, startingAddress, endingAddress, startingAddressWhereToMove);
+        }
         
     } while (userInput != 'q');
+    delete[] memoryView;
+    delete[] memoryRepresentation;
+}
+
+void fakeMemoryFill(char memoryRepresentation[][16])
+{
+    for (int i = 0; i < 256; i++)
+    {
+        for (int j = 0; j < 16; j++)
+        {
+            memoryRepresentation[i][j] = '.';
+        }
+    }
 }
 
 void displayListOfCommands()
@@ -134,39 +167,43 @@ void displayListOfCommands()
 void displayMemory(int memoryView[][16], char memoryRepresentation[][16], int startingAddress = 0x0)
 {
     cout << '\n';
-    int *rowIdx = new int, 
-        *columnIdx = new int,
-        *endingOfColumn = new int,
-        *endingOfRow = new int;
+    int rowIdx , 
+        columnIdx ,
+        endingOfColumn ,
+        endingOfRow ;
 
-    *columnIdx = startingAddress / 16;
-    *endingOfColumn = (8 + startingAddress / 16);
-    *endingOfRow = 16;
+    columnIdx = startingAddress / 16;
+    endingOfColumn = (8 + startingAddress / 16);
+    endingOfRow = 16;
 
-    for (int i = *columnIdx; i <= *endingOfColumn; i++)
+    for (int i = columnIdx; i <= endingOfColumn; i++)
     {
-        *rowIdx = 0;
+        rowIdx = 0;
 
-        if (i == *endingOfColumn)
-            *endingOfRow = startingAddress % 16;
+        if (i == endingOfColumn)
+            endingOfRow = startingAddress % 16;
         
-        cout << hex << right << setfill('0') << "073F:" << setw(3) << *columnIdx << *rowIdx << "  ";
+        cout << hex << right << setfill('0') << "073F:" << setw(3) << columnIdx << rowIdx << "  ";
         if (i == startingAddress / 16)
         {
-            *rowIdx = (startingAddress % 16);
+            rowIdx = (startingAddress % 16);
             for (int j = 0; j < startingAddress % 16; j++)
             {
                 cout << setw(3) << setfill(' ') << ' ';
             }
         }
-        for (int j = *rowIdx; j < *endingOfRow; j++)
+        for (int j = rowIdx; j < endingOfRow; j++)
         {
-            cout << setw(2) << setfill('0') << memoryView[i][j] << " ";
+            cout << setw(2) << setfill('0') << memoryView[i][j];
+            if (j == 7)
+                cout << '-';
+            else
+                cout << ' ';
         }
-        (*columnIdx) += 1;
-        if (i == *endingOfColumn)
+        columnIdx += 1;
+        if (i == endingOfColumn)
         {
-            for (int j = 0; j <= 16 - *endingOfRow; j++)
+            for (int j = 0; j <= 16 - endingOfRow; j++)
             {
                 cout << setw(3) << setfill(' ') << ' ';
             }
@@ -179,10 +216,10 @@ void displayMemory(int memoryView[][16], char memoryRepresentation[][16], int st
                 cout << setw(2) << setfill(' ') << ' ';
             }
         }
-        for (int j = *rowIdx; j < *endingOfRow; j++)
+        for (int j = rowIdx; j < endingOfRow; j++)
         {
             cout << memoryRepresentation[i][j] << " ";
-            *rowIdx += 1;
+            rowIdx += 1;
         }
         cout << '\n';
     }
@@ -207,23 +244,23 @@ void executionOfHexCommand(int value1, int value2)
 
 void executionOfFillCommand(int memoryView[][16], char memoryRepresentation[][16], int startingAddress, int endingAddress, int value)
 {
-    int *startingColumnIdx = new int,
-        *endingRowIdx = new int,
-        *endingColumnIdx = new int,
-        *startingRowIdx = new int;
+    int startingColumnIdx,
+        endingRowIdx,
+        endingColumnIdx ,
+        startingRowIdx;
 
-    *startingColumnIdx = startingAddress / 16;
-    *endingRowIdx = 15;
-    *endingColumnIdx = endingAddress / 16;
+    startingColumnIdx = startingAddress / 16;
+    endingRowIdx = 15;
+    endingColumnIdx = endingAddress / 16;
 
-    for (int i = *startingColumnIdx; i <= *endingColumnIdx; i++)
+    for (int i = startingColumnIdx; i <= endingColumnIdx; i++)
     {
-        *startingRowIdx = 0;
+        startingRowIdx = 0;
         if (i == startingAddress / 16)
-            *startingRowIdx = startingAddress % 16 ;
-        if (i == *endingColumnIdx)
-            *endingRowIdx = endingAddress % 16;
-        for (int j = *startingRowIdx; j <= *endingRowIdx; j++)
+            startingRowIdx = startingAddress % 16 ;
+        if (i == endingColumnIdx)
+            endingRowIdx = endingAddress % 16;
+        for (int j = startingRowIdx; j <= endingRowIdx; j++)
         {
             memoryView[i][j] = value;
             memoryRepresentation[i][j] = value;
@@ -233,34 +270,98 @@ void executionOfFillCommand(int memoryView[][16], char memoryRepresentation[][16
 
 void executionOfMoveCommand(int memoryView[][16], char memoryRepresentation[][16], int startingAddress, int endingAddress, int startingAddressWhereToMove)
 {
-    int *startingColumnIdx = new int,
-        *endingRowIdx = new int,
-        *endingColumnIdx = new int,
-        *startingRowIdx = new int,
-        *rowIdx = new int,
-        *columnIdx = new int;
+    int startingColumnIdx,
+        endingRowIdx,
+        endingColumnIdx,
+        startingRowIdx,
+        rowIdx,
+        columnIdx;
 
-    *columnIdx = startingAddressWhereToMove / 16;
-    *startingColumnIdx = startingAddress / 16;
-    *endingRowIdx = 15;
-    *endingColumnIdx = endingAddress / 16;
-    for (int i = *startingColumnIdx; i <= *endingColumnIdx; i++)
+    columnIdx = startingAddressWhereToMove / 16;
+    startingColumnIdx = startingAddress / 16;
+    endingRowIdx = 15;
+    endingColumnIdx = endingAddress / 16;
+    for (int i = startingColumnIdx; i <= endingColumnIdx; i++)
     {
-        (*rowIdx) = 0;
-        (*startingRowIdx) = 0;
+        rowIdx = 0;
+        startingRowIdx = 0;
         if (i == (startingAddress / 16))
         {
-            *rowIdx = (startingAddressWhereToMove % 16);
-            *startingRowIdx = (startingAddress % 16);
+            rowIdx = (startingAddressWhereToMove % 16);
+            startingRowIdx = (startingAddress % 16);
         }
-        if (i == (*endingColumnIdx))
-            *endingRowIdx = (endingAddress % 16);
-        for (int j = (*startingRowIdx); j <= (*endingRowIdx); j++)
+        if (i == endingColumnIdx)
+            endingRowIdx = (endingAddress % 16);
+        for (int j = startingRowIdx; j <= endingRowIdx; j++)
         {
-            memoryView[(*columnIdx)][(*rowIdx)] = memoryView[i][j];
-            memoryRepresentation[(*columnIdx)][(*rowIdx)] = memoryView[i][j];
-            *rowIdx += 1;
+            memoryView[columnIdx][rowIdx] = memoryView[i][j];
+            memoryRepresentation[columnIdx][rowIdx] = memoryView[i][j];
+            rowIdx += 1;
         }
-        *columnIdx += 1;
+        columnIdx += 1;
+    }
+}
+
+void executionOfSearchCommand(int memoryView[][16], char memoryRepresentation[][16], int startingAddress, int endingAddress, int value)
+{
+    int startingColumnIdx,
+        endingRowIdx,
+        endingColumnIdx,
+        startingRowIdx;
+
+    startingColumnIdx = startingAddress / 16;
+    endingRowIdx = 15;
+    endingColumnIdx = endingAddress / 16;
+
+    for (int i = startingColumnIdx; i <= endingColumnIdx; i++)
+    {
+        startingRowIdx = 0;
+        if (i == startingAddress / 16)
+            startingRowIdx = startingAddress % 16;
+        if (i == endingColumnIdx)
+            endingRowIdx = endingAddress % 16;
+        for (int j = startingRowIdx; j <= endingRowIdx; j++)
+        {
+            if (memoryView[i][j] == value)
+            {
+                cout << right << setfill('0') << "073F:" << setw(3) << i << j << endl;
+            }
+        }
+    }
+}
+
+void executionOfCompareCommand(int memoryView[][16], char memoryRepresentation[][16], int startingAddress, int endingAddress, int startingAddressWhereToMove)
+{
+    int startingColumnIdx,
+        endingRowIdx,
+        endingColumnIdx,
+        startingRowIdx,
+        rowIdx,
+        columnIdx;
+
+    columnIdx = startingAddressWhereToMove / 16;
+    startingColumnIdx = startingAddress / 16;
+    endingRowIdx = 15;
+    endingColumnIdx = endingAddress / 16;
+    for (int i = startingColumnIdx; i <= endingColumnIdx; i++)
+    {
+        rowIdx = 0;
+        startingRowIdx = 0;
+        if (i == (startingAddress / 16))
+        {
+            rowIdx = (startingAddressWhereToMove % 16);
+            startingRowIdx = (startingAddress % 16);
+        }
+        if (i == endingColumnIdx)
+            endingRowIdx = (endingAddress % 16);
+        for (int j = startingRowIdx; j <= endingRowIdx; j++)
+        {
+            if (memoryView[i][j] != memoryView[columnIdx][rowIdx])
+            {
+                cout << right << setfill('0') << "073F:" << setw(3) << i << j << "   " << setw(2) << memoryView[i][j]  << "   " << setw(2) <<  memoryView[columnIdx][rowIdx] << "   " << setfill('0') << "073F:" << setw(3) << columnIdx << rowIdx << endl;
+            }
+            rowIdx += 1;
+        }
+        columnIdx += 1;
     }
 }
