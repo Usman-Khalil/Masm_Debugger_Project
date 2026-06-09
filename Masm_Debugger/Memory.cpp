@@ -90,6 +90,23 @@ bool Memory::isValidMemoryRange(short int startingAddress, short int endingAddre
         return false;
 }
 
+void Memory::saveMemoryInstruction(int address , int opValue , int value)
+{
+    int row = address % 16;
+    int column = address / 16;
+    memoryView[column][row] = opValue;
+    if(row < 15)
+    {
+        memoryView[column][row + 1] = value;
+        memoryRepresentation[column][row + 1] = value;
+    }
+    else
+    {
+        memoryView[column + 1][0] = value;
+        memoryRepresentation[column + 1][0] = value;
+    }
+}
+
 Memory::~Memory()
 {
     delete[]memoryView;

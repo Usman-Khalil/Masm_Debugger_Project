@@ -2,10 +2,11 @@
 #define INSTRUCTIONS_H
 #include "Memory.h"
 #include "Registers.h"
+using namespace std;
 
 // Child class which inherit the properties from the parent class "Memory" ;
 
-class Instructions : protected Memory
+class Instructions 
 {
     int address,
         value,
@@ -30,6 +31,11 @@ public:
     void Compare();
 
     void loadRegisters();
+    void Assemble();
+    void Unassemble();
+    void Trace();
+    void seperateOperandForMovAndInc(string, string& , int&);
+    void seperateOperandForAdd(string, string&, string&);
 };
 
 

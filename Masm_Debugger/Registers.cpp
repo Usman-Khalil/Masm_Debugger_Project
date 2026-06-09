@@ -1,12 +1,13 @@
 #include <iostream>
 #include <iomanip>
 #include "Registers.h"
+#include <string>
 
 using namespace std;
 
 void Registers::displayRegiters()
 {
-	cout << endl << hex << setfill('0') << "AX=" << setw(4) << AX << "  "
+	cout << right << endl << hex << setfill('0') << "AX=" << setw(4) << AX << "  "
 		<< "BX=" << setw(4) << BX << "  "
 		<< "CX=" << setw(4) << CX << "  "
 		<< "DX=" << setw(4) << DX << "  "
@@ -19,12 +20,33 @@ void Registers::displayRegiters()
 		<< "SS=" << setw(4) << SS << "  "
 		<< "CS=" << setw(4) << CS << "  "
 		<< "IP=" << setw(4) << IP << "  ";
-		        //<< overFlag << "  "
-		        //<< zeroFlag << "  "
-		        //<< carryFlag << endl;
+	if (overFlow == true)
+		cout << "OV  ";
+	else
+		cout << "NV  ";
+	if (carryFlag == true)
+		cout << "CF  ";
+	else
+		cout << "NC  ";
+	if (zeroFlag == true)
+		cout << "ZF  ";
+	else
+		cout << "NZ  \n";
 }
 
 short int Registers::getInsPointer()
 {
 	return IP;
+}
+
+int Registers::getRegisterAscii(string regis)
+{
+	if (regis == "ax")
+		return 184;
+	else if (regis == "bx")
+		return 187;
+	else if (regis == "cx")
+		return 185;
+	else
+		return 186;
 }

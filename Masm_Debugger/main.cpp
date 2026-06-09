@@ -3,6 +3,7 @@
 #include "Memory.h"
 #include "Instructions.h"
 #include "Debugger.h"
+#include <string>
 
 using namespace std;
 

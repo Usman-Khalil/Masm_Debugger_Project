@@ -1,6 +1,8 @@
 #ifndef REGISTERS_H
 #define REGISTERS_H
 #include <string>
+using namespace std;
+
 class Registers
 {
 public:
@@ -17,9 +19,11 @@ public:
 		SS = 0x0000,
 		CS = 0x0000,
 		IP = 0x0100;
+	bool overFlow = false , carryFlag = false , zeroFlag = false;
 
 
 	void displayRegiters();
+	int getRegisterAscii(string);
 	short int getInsPointer();
 
 };

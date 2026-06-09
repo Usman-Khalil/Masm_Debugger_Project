@@ -19,6 +19,7 @@ public:
     void printMemory(short int);
     bool isValidMemoryAddress(short int);
     bool isValidMemoryRange(short int , short int);
+    void saveMemoryInstruction(int, int, int);
     ~Memory();
 };
 
