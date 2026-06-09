@@ -22,7 +22,7 @@ void Debugger::displayCommands()
 
 void Debugger::displayErrors()
 {
-    cout << "\033[31m\t^\n\t  Error\n\033[0m";
+    cout << "\033[31m\n\t^\n\t  Error\n\033[0m";
 }
 
 void Debugger::startDebugging()
@@ -57,6 +57,9 @@ void Debugger::startDebugging()
                 ins.Compare();
                 break;
             case 'q':
+                break;
+            case 'r':
+                ins.loadRegisters();
                 break;
             default:
                 displayErrors();          

@@ -1,6 +1,7 @@
 #ifndef INSTRUCTIONS_H
 #define INSTRUCTIONS_H
 #include "Memory.h"
+#include "Registers.h"
 
 // Child class which inherit the properties from the parent class "Memory" ;
 
@@ -27,6 +28,8 @@ public:
     void Search();
     // Take the range and starting address input from the user and compare the content of addresses corresspondingly and display the address and there respective content where it is contradictory;
     void Compare();
+
+    void loadRegisters();
 };
 
 

@@ -2,77 +2,30 @@
 #include <iomanip>
 #include "Memory.h"
 #include "Instructions.h"
+#include "Debugger.h"
+#include "Registers.h"
 
 using namespace std;
+
+Debugger E;
+Registers R;
 
 void Instructions::Dump()
 {
    
     cout << '\n';
+    cin.ignore();
     cout << "Enter the address or press Enter for the default memory pointer : ";
     if (cin.get() == '\n')
-        address = memoryPointer;
+        address = getMemoryPointer();
     else
         cin >> hex >> address;
-    cout << '\n';
-    int rowIdx,
-        columnIdx,
-        endingOfColumn,
-        endingOfRow;
-    
-    columnIdx = address / 16;
-    endingOfColumn = (8 + address / 16);
-    endingOfRow = 16;
-    
-    for (int i = columnIdx; i <= endingOfColumn; i++)
+    if (!(isValidMemoryAddress(address)))
     {
-        rowIdx = 0;
-    
-        if (i == endingOfColumn)
-            endingOfRow = address % 16;
-    
-        cout << hex << right << setfill('0') << "073F:" << setw(3) << columnIdx << rowIdx << "  ";
-        if (i == address / 16)
-        {
-            rowIdx = (address % 16);
-            for (int j = 0; j < address % 16; j++)
-            {
-                cout << setw(3) << setfill(' ') << ' ';
-            }
-        }
-        for (int j = rowIdx; j < endingOfRow; j++)
-        {
-            cout << setw(2) << setfill('0') << memoryView[i][j];
-            if (j == 7)
-                cout << '-';
-            else
-                cout << ' ';
-        }
-        columnIdx += 1;
-        if (i == endingOfColumn)
-        {
-            for (int j = 0; j <= 16 - endingOfRow; j++)
-            {
-                cout << setw(3) << setfill(' ') << ' ';
-            }
-        }
-        cout << "\t\t\t";
-        if (i == address / 16)
-        {
-            for (int j = 0; j < address % 16; j++)
-            {
-                cout << setw(2) << setfill(' ') << ' ';
-            }
-        }
-        for (int j = rowIdx; j < endingOfRow; j++)
-        {
-            cout << memoryRepresentation[i][j] << " ";
-            rowIdx += 1;
-        }
-        cout << '\n';
+        E.displayErrors();
+        return;
     }
-    cout << '\n';
-
+    printMemory(address);
 }
 
 void Instructions::Enter()
@@ -80,6 +33,11 @@ void Instructions::Enter()
     cout << '\n';
     cout << "Enter the address : ";
     cin >> hex >> address;
+    if (!(isValidMemoryAddress(address)))
+    {
+        E.displayErrors();
+        return;
+    }
     cout << "Enter the value (in hexadecimal) : ";
     cin >> hex >> value;
 
@@ -105,6 +63,11 @@ void Instructions::Fill()
 {
     cout << "Enter the range of addresses [ starting address ] and [ ending address ] : ";
     cin >> hex >> startingAddress >> endingAddress;
+    if (!(isValidMemoryRange(startingAddress, endingAddress)))
+    {
+        E.displayErrors();
+        return;
+    }
     cout << "Enter the value to  be filled : ";
     cin >> hex >> value;
 
@@ -136,9 +99,18 @@ void Instructions::Move()
 {
     cout << "Enter the range of addresses [ starting address ] and [ ending address ] : ";
     cin >> hex >> startingAddress >> endingAddress;
+    if (!(isValidMemoryRange(startingAddress, endingAddress)))
+    {
+        E.displayErrors();
+        return;
+    }
     cout << "Enter the starting address where to move : ";
     cin >> hex >> address;
-
+    if (!(isValidMemoryAddress(address)))
+    {
+        E.displayErrors();
+        return;
+    }
     int startingColumnIdx,
         endingRowIdx,
         endingColumnIdx,
@@ -175,6 +147,11 @@ void Instructions::Search()
 {
     cout << "Enter the range of addresses [ starting address ] and [ ending address ] : ";
     cin >> hex >> startingAddress >> endingAddress;
+    if (!(isValidMemoryRange(startingAddress, endingAddress)))
+    {
+        E.displayErrors();
+        return;
+    }
     cout << "Enter the value to  be searched : ";
     cin >> hex >> value;
 
@@ -208,9 +185,18 @@ void Instructions::Compare()
 {
     cout << "Enter the range of addresses [ starting address ] and [ ending address ] : ";
     cin >> hex >> startingAddress >> endingAddress;
+    if (!(isValidMemoryRange(startingAddress, endingAddress)))
+    {
+        E.displayErrors();
+        return;
+    }
     cout << "Enter the starting address from where to start compare : ";
     cin >> hex >> address;
-
+    if (!(isValidMemoryAddress(address)))
+    {
+        E.displayErrors();
+        return;
+    }
     int startingColumnIdx,
         endingRowIdx,
         endingColumnIdx,
@@ -243,4 +229,9 @@ void Instructions::Compare()
         }
         columnIdx += 1;
     }
+}
+
+void Instructions::loadRegisters()
+{
+    R.displayRegiters();
 }

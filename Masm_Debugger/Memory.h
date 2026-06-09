@@ -11,12 +11,14 @@ public:
 
     int (*memoryView)[16] = new int[256][16]();
     char (*memoryRepresentation)[16] = new char[256][16]();
-    int memoryPointer = 0x0100;
+    short int memoryPointer = 0x0100;
 
     // Functions
 
-    void fillFakeMemory();
-    Memory();
+    short int getMemoryPointer();
+    void printMemory(short int);
+    bool isValidMemoryAddress(short int);
+    bool isValidMemoryRange(short int , short int);
     ~Memory();
 };
 
