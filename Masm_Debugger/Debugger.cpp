@@ -9,6 +9,7 @@ using namespace std;
 void Debugger::displayCommands()
 {
     cout << left << '\n';
+    cout << "\t...............................................................\n\t.                                                             .\n\t.             Masm Debugger 3.0 - Project                     .\n\t.                                                             .\n\t...............................................................\n\n";
     cout << setw(16) << "1. dump" << "D  [range] \n";
     cout << setw(16) << "2. enter" << "E  address[list] \n";
     cout << setw(16) << "3. fill" << "F  range list \n";
@@ -73,6 +74,9 @@ void Debugger::startDebugging()
                 break;
             case 't':
                 ins.Trace();
+                break;
+            case '?':
+                ins.Help();
                 break;
             default:
                 displayErrors();          

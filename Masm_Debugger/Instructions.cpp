@@ -511,3 +511,15 @@ void Instructions::Trace()
     remove("memory.txt");
     rename("temp_mem.txt", "memory.txt");
 }
+
+void Instructions::Help()
+{
+    ifstream fin;
+    fin.open("helpMe.txt");
+    string getContent;
+    while (getline(fin, getContent))
+    {
+        cout << "\n" << getContent;
+    }
+    fin.close();
+}

@@ -34,6 +34,7 @@ public:
     void Assemble();
     void Unassemble();
     void Trace();
+    void Help();
     void seperateOperandForMovAndInc(string, string& , int&);
     void seperateOperandForAdd(string, string&, string&);
 };
