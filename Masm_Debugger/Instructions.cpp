@@ -369,11 +369,13 @@ void Instructions::Trace()
             R.CX = value;
         else
             R.DX = value;
-
+        R.checkForFlags();
         R.IP += 3;
     }
     else if (opCode == "inc")
     {
+        if (R.AX == 0xffff || R.BX == 0xffff || R.CX == 0xFFFF || R.DX == 0xFFFF)
+            R.carryFlag == true;
         if (regis == "ax")
             R.AX ++;
         else if (regis == "bx")
@@ -382,11 +384,13 @@ void Instructions::Trace()
             R.CX ++;
         else
             R.DX ++;
-
+        R.checkForFlags();
         R.IP ++;
     }
     else if (opCode == "dec")
     {
+        if (R.AX == 0 || R.BX == 0 || R.CX == 0 || R.DX == 0)
+            R.carryFlag == true;
         if (regis == "ax")
             R.AX--;
         else if (regis == "bx")
@@ -396,6 +400,7 @@ void Instructions::Trace()
         else
             R.DX--;
 
+        R.checkForFlags();
         R.IP++;
     }
     else if (opCode == "add")
@@ -444,6 +449,7 @@ void Instructions::Trace()
             else
                 R.DX += R.DX;
         }
+        R.checkForFlags();
         R.IP += 2;
     }
     else if (opCode == "sub")
@@ -492,6 +498,7 @@ void Instructions::Trace()
             else
                 R.DX -= R.DX;
         }
+        R.checkForFlags();
         R.IP += 2;
     }
     string line;

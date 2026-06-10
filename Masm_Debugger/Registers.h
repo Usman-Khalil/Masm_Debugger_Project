@@ -25,6 +25,7 @@ public:
 	void displayRegiters();
 	int getRegisterAscii(string);
 	short int getInsPointer();
+	void checkForFlags();
 
 };
 

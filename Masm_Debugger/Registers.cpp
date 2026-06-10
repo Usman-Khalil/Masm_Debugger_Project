@@ -50,3 +50,11 @@ int Registers::getRegisterAscii(string regis)
 	else
 		return 186;
 }
+
+void Registers::checkForFlags()
+{
+	if (AX == 0 || BX == 0 || CX == 0 || DX == 0)
+		zeroFlag = true;
+	if (AX > 0xfff || BX > 0xfff || CX > 0xfff || DX > 0xfff)
+		overFlow = true;
+}
